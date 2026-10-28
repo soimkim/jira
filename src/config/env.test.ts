@@ -15,19 +15,21 @@ describe('environment configuration', () => {
         ['osct', 'JIRA_CLM_OSCT', 'OSCT'],
         ['harmony', 'JIRA_HARMONY_OSC', 'OSC'],
     ] as const)('loads only the selected %s credentials', (alias, prefix, projectKey) => {
-        process.env[`${prefix}_URL`] = 'https://jira.example/issue/';
         process.env[`${prefix}_TOKEN`] = 'fake-test-token';
-        expect(getJiraConfig(alias)).toMatchObject({ alias, projectKey, baseUrl: 'https://jira.example/issue', authType: 'bearer' });
+        if (alias !== 'harmony') process.env[`${prefix}_ALLOW_HTTP`] = 'true';
+        const baseUrl = alias === 'harmony'
+            ? 'https://harmony.lge.com:8443/issue'
+            : 'http://clm.lge.com/issue';
+        expect(getJiraConfig(alias)).toMatchObject({ alias, projectKey, baseUrl, authType: 'bearer' });
     });
     test('blocks HTTP until explicitly allowed', () => {
-        process.env.JIRA_CLM_OSCT_URL = 'http://jira.example/issue';
         process.env.JIRA_CLM_OSCT_TOKEN = 'fake-test-token';
         expect(() => getJiraConfig('osct')).toThrow('ALLOW_HTTP=true');
         process.env.JIRA_CLM_OSCT_ALLOW_HTTP = 'true';
-        expect(getJiraConfig('osct').baseUrl).toBe('http://jira.example/issue');
+        expect(getJiraConfig('osct').baseUrl).toBe('http://clm.lge.com/issue');
     });
     test('validates basic username, placeholders, and auth type', () => {
-        process.env.JIRA_CLM_OSC_URL = 'https://jira.example/issue';
+        process.env.JIRA_CLM_OSC_ALLOW_HTTP = 'true';
         process.env.JIRA_CLM_OSC_TOKEN = 'replace_with_your_token';
         expect(() => getJiraConfig('osc')).toThrow('TOKEN');
         process.env.JIRA_CLM_OSC_TOKEN = 'fake-test-token';
@@ -38,9 +40,11 @@ describe('environment configuration', () => {
         process.env.JIRA_CLM_OSC_AUTH_TYPE = 'invalid';
         expect(() => getJiraConfig('osc')).toThrow('AUTH_TYPE');
     });
-    test.each(['https://jira.example/issue/projects/OSC', 'https://user:pass@jira.example/issue', 'file:///tmp/jira', 'https://jira.example/issue?token=x'])('rejects invalid base URL %s', url => {
-        process.env.JIRA_CLM_OSC_URL = url;
-        expect(() => getJiraConfig('osc')).toThrow();
+    test('ignores URL environment variables and uses the selected Skill URL', () => {
+        process.env.JIRA_CLM_OSC_URL = 'not-a-url';
+        process.env.JIRA_CLM_OSC_TOKEN = 'fake-test-token';
+        process.env.JIRA_CLM_OSC_ALLOW_HTTP = 'true';
+        expect(getJiraConfig('osc').baseUrl).toBe('http://clm.lge.com/issue');
     });
     test('defaults to home .env and supports explicit ~/ path', () => {
         const config = jest.spyOn(dotenv, 'config').mockReturnValue({ parsed: {} });

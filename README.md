@@ -46,7 +46,7 @@ my-jira-skill
 
    ## 조회 대상
 
-   | 채팅 명령 | 서버 base URL | 기본 프로젝트 | 환경변수 접두사 |
+   | 채팅 명령 | SKILL.md의 UI 주소 | 기본 프로젝트 | 환경변수 접두사 |
    | --- | --- | --- | --- |
    | `/osc` | `http://clm.lge.com/issue` | `OSC` | `JIRA_CLM_OSC` |
    | `/osct` | `http://clm.lge.com/issue` | `OSCT` | `JIRA_CLM_OSCT` |
@@ -59,7 +59,7 @@ my-jira-skill
    - http://clm.lge.com/issue/projects/OSC
    - https://harmony.lge.com:8443/issue/browse/OSC
 
-   API에는 `/projects/OSCT`나 `/browse/OSC`가 아닌 base URL을 사용합니다. Jira Server/Data Center의 `/rest/api/2/search`를 가정하며, 실제 사내 서버의 API 및 인증 지원은 관리자가 확인해야 합니다. Harmony의 `/browse/OSC`는 개별 이슈 키가 아니므로 결과 링크는 `/browse/OSC-123` 형태로 만듭니다.
+   CLI는 각 별칭의 `.github/skills/<name>/SKILL.md`에 적힌 UI 주소를 읽어 `/projects/<project>` 또는 `/browse/<project>` 부분을 제거한 API base URL을 사용합니다. `JIRA_*_URL` 환경변수는 사용하지 않습니다. Jira Server/Data Center의 `/rest/api/2/search`를 가정하며, 실제 사내 서버의 API 및 인증 지원은 관리자가 확인해야 합니다. Harmony의 `/browse/OSC`는 개별 이슈 키가 아니므로 결과 링크는 `/browse/OSC-123` 형태로 만듭니다.
 
    ## 처음 사용하는 사용자
 

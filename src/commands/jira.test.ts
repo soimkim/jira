@@ -6,7 +6,11 @@ jest.mock('axios');
 const get = jest.mocked(axios.get);
 const original = process.env;
 beforeEach(() => {
-    process.env = { JIRA_CLM_OSCT_URL: 'https://jira.example/issue', JIRA_CLM_OSCT_TOKEN: 'test-token' };
+    process.env = {
+        JIRA_CLM_OSCT_URL: 'https://jira.example/issue',
+        JIRA_CLM_OSCT_TOKEN: 'test-token',
+        JIRA_CLM_OSCT_ALLOW_HTTP: 'true',
+    };
     jest.resetAllMocks();
 });
 afterEach(() => { process.env = original; });
@@ -18,7 +22,7 @@ test('formats actual issue fields and browse link', async () => {
     const result = await jiraCommandHandler('/osct 내가 assignee인 이슈 중 Reopen 또는 In Review');
     expect(result).toContain('[osct] 1건 중 1건');
     expect(result).toContain('In Review | Test issue | 미지정');
-    expect(result).toContain('https://jira.example/issue/browse/OSCT-1');
+    expect(result).toContain('http://clm.lge.com/issue/browse/OSCT-1');
     expect(result).toContain('status IN ("Reopen", "In Review")');
 });
 
