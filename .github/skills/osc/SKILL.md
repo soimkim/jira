@@ -2,7 +2,7 @@
 name: osc
 description: CLM Jira OSC 프로젝트의 이슈를 읽기 전용으로 조회한다. 내 담당 이슈, 상태별 이슈 목록 요청에 사용한다.
 argument-hint: 조회할 이슈 조건 (예: 내가 assignee인 Reopen 이슈)
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # CLM OSC 조회

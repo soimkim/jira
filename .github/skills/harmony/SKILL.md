@@ -2,7 +2,7 @@
 name: harmony
 description: Harmony Jira OSC 프로젝트 이슈를 읽기 전용으로 조회한다. CLM OSC와 별도 서버와 토큰을 사용하는 요청에 사용한다.
 argument-hint: 조회할 이슈 조건 (예: 내가 assignee인 Open 이슈)
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # Harmony OSC 조회
